@@ -1,8 +1,9 @@
 package config
 
 import (
-	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"time"
+
+	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
 type KsniffSettings struct {
@@ -23,6 +24,7 @@ type KsniffSettings struct {
 	DetectedContainerRuntime       string
 	Image                          string
 	TCPDumpImage                   string
+	TCPDumpCrictlFlags             string
 	UseDefaultImage                bool
 	UseDefaultTCPDumpImage         bool
 	UserSpecifiedKubeContext       string

@@ -7,7 +7,7 @@ import (
 
 type ContainerdBridge struct {
 	tcpdumpContainerName string
-	socketPath string
+	socketPath           string
 }
 
 func NewContainerdBridge() *ContainerdBridge {
@@ -30,7 +30,7 @@ func (d ContainerdBridge) GetDefaultSocketPath() string {
 	return "/run/containerd/containerd.sock"
 }
 
-func (d *ContainerdBridge) BuildTcpdumpCommand(containerId *string, netInterface string, filter string, pid *string, socketPath string, tcpdumpImage string) []string {
+func (d *ContainerdBridge) BuildTcpdumpCommand(containerId *string, netInterface string, filter string, pid *string, socketPath string, tcpdumpImage string, tcpdumpCrictlFlags string) []string {
 	d.tcpdumpContainerName = "ksniff-container-" + utils.GenerateRandomString(8)
 	d.socketPath = socketPath
 	tcpdumpCommand := fmt.Sprintf("tcpdump -i %s -U -w - %s", netInterface, filter)
@@ -40,10 +40,10 @@ func (d *ContainerdBridge) BuildTcpdumpCommand(containerId *string, netInterface
     export CONTAINERD_NAMESPACE="k8s.io"
     export CONTAINER_RUNTIME_ENDPOINT="unix:///host${CONTAINERD_SOCKET}"
     export IMAGE_SERVICE_ENDPOINT=${CONTAINER_RUNTIME_ENDPOINT}
-    crictl pull %s >/dev/null
+    crictl pull %s %s >/dev/null
     netns=$(crictl inspect %s | jq '.info.runtimeSpec.linux.namespaces[] | select(.type == "network") | .path' | tr -d '"')
     exec chroot /host ctr -a ${CONTAINERD_SOCKET} run --rm --with-ns "network:${netns}" %s %s %s 
-    `, d.socketPath, tcpdumpImage, *containerId, tcpdumpImage, d.tcpdumpContainerName, tcpdumpCommand)
+    `, d.socketPath, tcpdumpCrictlFlags, tcpdumpImage, *containerId, tcpdumpImage, d.tcpdumpContainerName, tcpdumpCommand)
 	command := []string{"/bin/sh", "-c", shellScript}
 	return command
 }

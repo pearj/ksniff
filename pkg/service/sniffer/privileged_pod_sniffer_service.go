@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"io"
 
-	log "github.com/sirupsen/logrus"
-	v1 "k8s.io/api/core/v1"
 	"ksniff/kube"
 	"ksniff/pkg/config"
 	"ksniff/pkg/service/sniffer/runtime"
+
+	log "github.com/sirupsen/logrus"
+	v1 "k8s.io/api/core/v1"
 )
 
 type PrivilegedPodSnifferService struct {
@@ -107,6 +108,7 @@ func (p *PrivilegedPodSnifferService) Start(stdOut io.Writer) error {
 		p.targetProcessId,
 		p.settings.SocketPath,
 		p.settings.TCPDumpImage,
+		p.settings.TCPDumpCrictlFlags,
 	)
 
 	exitCode, err := p.kubernetesApiService.ExecuteCommand(p.privilegedPod.Name, p.privilegedContainerName, command, stdOut)

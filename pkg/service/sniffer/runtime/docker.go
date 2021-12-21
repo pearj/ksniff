@@ -27,7 +27,7 @@ func (d *DockerBridge) ExtractPid(inspection string) (*string, error) {
 	panic("Docker doesn't need this implemented")
 }
 
-func (d *DockerBridge) BuildTcpdumpCommand(containerId *string, netInterface string, filter string, pid *string, socketPath string, tcpdumpImage string) []string {
+func (d *DockerBridge) BuildTcpdumpCommand(containerId *string, netInterface string, filter string, pid *string, socketPath string, tcpdumpImage string, tcpdumpCrictlFlags string) []string {
 	d.tcpdumpContainerName = "ksniff-container-" + utils.GenerateRandomString(8)
 	containerNameFlag := fmt.Sprintf("--name=%s", d.tcpdumpContainerName)
 

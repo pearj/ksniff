@@ -138,6 +138,11 @@ func NewCmdSniff(streams genericclioptions.IOStreams) *cobra.Command {
 	_ = viper.BindEnv("tcpdump-image", "KUBECTL_PLUGINS_LOCAL_FLAG_TCPDUMP_IMAGE")
 	_ = viper.BindPFlag("tcpdump-image", cmd.Flags().Lookup("tcpdump-image"))
 
+	cmd.Flags().StringVarP(&ksniffSettings.TCPDumpCrictlFlags, "tcpdump-crictl-flags", "", "",
+		"the tcpdump crictl flags when using containerd, can be used to authenticate with a container registry")
+	_ = viper.BindEnv("tcpdump-crictl-flags", "KUBECTL_PLUGINS_LOCAL_FLAG_TCPDUMP_CRICTL_FLAGS")
+	_ = viper.BindPFlag("tcpdump-crictl-flags", cmd.Flags().Lookup("tcpdump-crictl-flags"))
+
 	cmd.Flags().StringVarP(&ksniffSettings.UserSpecifiedKubeContext, "context", "x", "",
 		"kubectl context to work on (optional)")
 	_ = viper.BindEnv("context", "KUBECTL_PLUGINS_CURRENT_CONTEXT")
@@ -357,6 +362,8 @@ func (o Ksniff) setupSignalHandler() chan interface{} {
 			case sig := <-signals:
 				if sig == syscall.SIGINT {
 					o.snifferService.Cleanup()
+					// Without this exit it seems to hang
+					os.Exit(0)
 					break SIGNAL_LOOP
 				}
 			case <-exit:
