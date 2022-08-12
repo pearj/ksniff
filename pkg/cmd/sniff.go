@@ -87,6 +87,10 @@ func NewCmdSniff(streams genericclioptions.IOStreams) *cobra.Command {
 	_ = viper.BindEnv("namespace", "KUBECTL_PLUGINS_CURRENT_NAMESPACE")
 	_ = viper.BindPFlag("namespace", cmd.Flags().Lookup("namespace"))
 
+	cmd.Flags().StringVarP(&ksniffSettings.UserSpecifiedPrivilegedNamespace, "privileged-namespace", "", "", "privileged namespace (optional)")
+	_ = viper.BindEnv("privileged-namespace", "KUBECTL_PLUGINS_CURRENT_PRIVILEGED_NAMESPACE")
+	_ = viper.BindPFlag("privileged-namespace", cmd.Flags().Lookup("privileged-namespace"))
+
 	cmd.Flags().StringVarP(&ksniffSettings.UserSpecifiedInterface, "interface", "i", "any", "pod interface to packet capture (optional)")
 	_ = viper.BindEnv("interface", "KUBECTL_PLUGINS_LOCAL_FLAG_INTERFACE")
 	_ = viper.BindPFlag("interface", cmd.Flags().Lookup("interface"))
@@ -304,7 +308,12 @@ func (o *Ksniff) Validate() error {
 		return err
 	}
 
-	kubernetesApiService := kube.NewKubernetesApiService(o.clientset, o.restConfig, o.resultingContext.Namespace)
+	privilegedNamespace := o.resultingContext.Namespace
+	if o.settings.UserSpecifiedPrivilegedNamespace != "" {
+		privilegedNamespace = o.settings.UserSpecifiedPrivilegedNamespace
+	}
+	log.Infof("Privileged Namespace: '%s'", privilegedNamespace)
+	kubernetesApiService := kube.NewKubernetesApiService(o.clientset, o.restConfig, privilegedNamespace)
 
 	if o.settings.UserSpecifiedPrivilegedMode {
 		log.Info("sniffing method: privileged pod")

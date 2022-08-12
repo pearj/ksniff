@@ -7,29 +7,30 @@ import (
 )
 
 type KsniffSettings struct {
-	UserSpecifiedPodName           string
-	UserSpecifiedInterface         string
-	UserSpecifiedFilter            string
-	UserSpecifiedPodCreateTimeout  time.Duration
-	UserSpecifiedContainer         string
-	UserSpecifiedNamespace         string
-	UserSpecifiedOutputFile        string
-	UserSpecifiedLocalTcpdumpPath  string
-	UserSpecifiedRemoteTcpdumpPath string
-	UserSpecifiedVerboseMode       bool
-	UserSpecifiedPrivilegedMode    bool
-	UserSpecifiedImage             string
-	DetectedPodNodeName            string
-	DetectedContainerId            string
-	DetectedContainerRuntime       string
-	Image                          string
-	TCPDumpImage                   string
-	TCPDumpCrictlFlags             string
-	UseDefaultImage                bool
-	UseDefaultTCPDumpImage         bool
-	UserSpecifiedKubeContext       string
-	SocketPath                     string
-	UseDefaultSocketPath           bool
+	UserSpecifiedPodName             string
+	UserSpecifiedInterface           string
+	UserSpecifiedFilter              string
+	UserSpecifiedPodCreateTimeout    time.Duration
+	UserSpecifiedContainer           string
+	UserSpecifiedNamespace           string
+	UserSpecifiedPrivilegedNamespace string
+	UserSpecifiedOutputFile          string
+	UserSpecifiedLocalTcpdumpPath    string
+	UserSpecifiedRemoteTcpdumpPath   string
+	UserSpecifiedVerboseMode         bool
+	UserSpecifiedPrivilegedMode      bool
+	UserSpecifiedImage               string
+	DetectedPodNodeName              string
+	DetectedContainerId              string
+	DetectedContainerRuntime         string
+	Image                            string
+	TCPDumpImage                     string
+	TCPDumpCrictlFlags               string
+	UseDefaultImage                  bool
+	UseDefaultTCPDumpImage           bool
+	UserSpecifiedKubeContext         string
+	SocketPath                       string
+	UseDefaultSocketPath             bool
 }
 
 func NewKsniffSettings(streams genericclioptions.IOStreams) *KsniffSettings {
